@@ -273,6 +273,10 @@ a.info {
     color: var(--quoteColor);
 }
 
+.delete-btn {
+    background-color: var(--titleColor);
+}
+
 /* On redéfinit certaines parties du "info" pour l'affichage dans les commentaires */
 .detailComment .info {
     margin: 5px 0 5px 0;
