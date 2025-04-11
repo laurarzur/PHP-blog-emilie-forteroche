@@ -186,9 +186,21 @@ class AdminController {
         // On vérifie que l'utilisateur est connecté.
         $this->checkIfUserIsConnected();
 
+        $column = Utils::request("column"); 
+        $order = Utils::request("order");
+
+        // On vérifie que les valeurs de "column" et "order" soient valides et on passe une valeur par défaut si ce n'est pas le cas 
+        if ($column !== "title" && $column !== "views" && $column !== "comments_number" && $column !== "date_creation") {
+            $column = "id";
+        }
+
+        if ($order !== "desc") {
+            $order = "asc";
+        }
+
         // On récupère les articles.
         $articleManager = new ArticleManager();
-        $articles = $articleManager->getAllArticles();
+        $articles = $articleManager->getArticlesMonitoringInfos($column, $order);
 
         // On affiche la page d'administration.
         $view = new View("Monitoring");

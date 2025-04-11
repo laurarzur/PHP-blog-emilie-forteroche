@@ -107,5 +107,30 @@ class ArticleManager extends AbstractEntityManager
             'id' => $id,
             'views' => $views
         ]);
+    } 
+
+    /**
+     * Récupère les informations de monitoring des articles.
+     * @return array : un tableau d'articles.
+     */
+    public function getArticlesMonitoringInfos(?string $column = "", ?string $order = ""): array
+    {
+        $sql = "SELECT article.id, article.title, article.views, article.date_creation, COUNT(comment.id) AS comments_number FROM article INNER JOIN comment on article.id = comment.id_article GROUP BY article.id";
+        
+        if($column) {
+           $sql .= ' ORDER BY ' . $column;
+        }
+
+        if($order) {
+            $sql .= ' ' . strtoupper($order);
+         }
+
+        $result = $this->db->query($sql);
+        $articles = [];
+
+        while ($article = $result->fetch()) {
+            $articles[] = new Article($article);
+        }
+       return $articles;
     }
 }
