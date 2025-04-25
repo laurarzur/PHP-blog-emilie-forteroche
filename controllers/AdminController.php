@@ -5,6 +5,11 @@
  
 class AdminController {
 
+    public const COLUMN_TITLE = 'title';  
+    public const COLUMN_VIEWS = 'views'; 
+    public const COLUMN_COMMENTS_NUMBER = 'comments_number'; 
+    public const COLUMN_DATE_CREATION = 'date_creation'; 
+
     /**
      * Affiche la page d'administration.
      * @return void
@@ -189,8 +194,10 @@ class AdminController {
         $column = Utils::request("column"); 
         $order = Utils::request("order");
 
+        $columnValues = [self::COLUMN_TITLE, self::COLUMN_VIEWS, self::COLUMN_COMMENTS_NUMBER, self::COLUMN_DATE_CREATION];
+
         // On vérifie que les valeurs de "column" et "order" soient valides et on passe une valeur par défaut si ce n'est pas le cas 
-        if ($column !== "title" && $column !== "views" && $column !== "comments_number" && $column !== "date_creation") {
+        if (!in_array($column, $columnValues)) {
             $column = "id";
         }
 
@@ -222,6 +229,11 @@ class AdminController {
         // On supprime le commentaire.
         $commentManager = new CommentManager();
         $comment = $commentManager->getCommentById($id); 
+
+        if (!$comment) {
+            throw new Exception("Le commentaire n'existe pas.");
+        }
+
         $articleId = $comment->getIdArticle();
         $commentManager->deleteComment($comment);
 
